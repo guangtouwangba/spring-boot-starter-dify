@@ -1,9 +1,8 @@
 package com.dify.springbootstarterdify.configuration;
 
 
-import com.dify.springbootstarterdify.serivce.DifyService;
+import com.dify.springbootstarterdify.client.DifyClient;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -11,17 +10,13 @@ import org.springframework.context.annotation.Configuration;
 public class DifyAutoConfiguration {
 
     /**
-     * DifyService bean
+     * DifyClient is a class that contains all the routes that are used in the Dify API.
      */
-    private final DifyService difyService;
+    private final DifyClient difyClient;
 
-    public DifyAutoConfiguration(DifyService difyService) {
-        this.difyService = difyService;
+    public DifyAutoConfiguration(DifyClient difyClient) {
+        this.difyClient = difyClient;
     }
 
-    @Bean
-    public DifyService difyService() {
-        return difyService;
-    }
 
 }
