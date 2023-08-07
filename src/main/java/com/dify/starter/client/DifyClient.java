@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.ErrorResponseException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -46,8 +47,11 @@ public class DifyClient {
     }
 
     public DifyResponse sendMessageBlocking(DifyRequest request) {
+        if ("streaming".equals(request.getResponse_mode())) {
+            throw new IllegalArgumentException("you should call sendMessageStreaming method for streaming response");
+        }
         return webClient.post()
-                .uri(baseUrl)
+                .uri(baseUrl + "/chat-messages")
                 .header("Authorization", "Bearer " + apiKey)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
@@ -58,7 +62,7 @@ public class DifyClient {
 
     public Flux<DifyResponse> sendMessageStreaming(DifyRequest request) {
         return webClient.post()
-                .uri(baseUrl)
+                .uri(baseUrl + "/chat-messages")
                 .header("Authorization", "Bearer " + apiKey)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
@@ -118,6 +122,8 @@ public class DifyClient {
                 .block();
     }
 
+    @Deprecated
+
     public AudioToTextResponse audioToText(MultipartFile audioFile) throws IOException {
         String contentType = audioFile.getContentType();
         if (contentType == null || !contentType.startsWith("audio/")) {
@@ -141,9 +147,10 @@ public class DifyClient {
                 .block();
     }
 
+    @Deprecated
     public ParameterResponse fetchParameters() {
         return webClient.get()
-                .uri(baseUrl +"/parameters")
+                .uri(baseUrl + "/parameters")
                 .header("Authorization", "Bearer " + apiKey)
                 .retrieve()
                 .bodyToMono(ParameterResponse.class)
