@@ -1,4 +1,4 @@
-package com.dify.springbootstarterdify.configuration;
+package com.dify.starter.configuration;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

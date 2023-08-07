@@ -1,4 +1,4 @@
-package com.dify.springbootstarterdify.entity;
+package com.dify.starter.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

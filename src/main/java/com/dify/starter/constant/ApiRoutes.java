@@ -1,4 +1,4 @@
-package com.dify.springbootstarterdify.constant;
+package com.dify.starter.constant;
 
 /**
  * @author guangtouwangba

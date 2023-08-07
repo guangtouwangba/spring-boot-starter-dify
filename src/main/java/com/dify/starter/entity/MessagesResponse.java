@@ -1,4 +1,4 @@
-package com.dify.springbootstarterdify.entity;
+package com.dify.starter.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,19 +10,20 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConversationsResponse {
-    private int limit;
+public class MessagesResponse {
     private Boolean has_more;
-    private List<ConversationData> data;
+    private List<MessageData> data;
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ConversationData {
+    public static class MessageData {
         private String id;
-        private String name;
+        private String conversation_id;
         private Map<String, Object> inputs;
-        private String status;
+        private String query;
+        private String answer;
+        private String feedback;
         private Long created_at;
     }
 }

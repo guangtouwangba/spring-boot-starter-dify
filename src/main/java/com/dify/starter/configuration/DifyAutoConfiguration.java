@@ -1,7 +1,7 @@
-package com.dify.springbootstarterdify.configuration;
+package com.dify.starter.configuration;
 
 
-import com.dify.springbootstarterdify.client.DifyClient;
+import com.dify.starter.client.DifyClient;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 

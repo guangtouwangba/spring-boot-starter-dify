@@ -1,4 +1,4 @@
-package com.dify.springbootstarterdify.entity;
+package com.dify.starter.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

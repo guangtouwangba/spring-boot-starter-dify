@@ -1,11 +1,11 @@
-package com.dify.springbootstarterdify.client;
+package com.dify.starter.client;
 
 /**
  * @author guangtouwangba
  * @date 2023/8/7
  **/
 
-import com.dify.springbootstarterdify.entity.*;
+import com.dify.starter.entity.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;

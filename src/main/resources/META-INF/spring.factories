@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.dify.springbootstarterdify.configuration.DifyAutoConfiguration
+  com.dify.starter.configuration.DifyAutoConfiguration
