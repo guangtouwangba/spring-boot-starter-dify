@@ -6,11 +6,12 @@ package com.dify.starter.client;
  **/
 
 import com.dify.starter.entity.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.ErrorResponseException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class DifyClient {
     @Value("${dify.apiKey}")
@@ -28,11 +30,11 @@ public class DifyClient {
     @Value("${dify.baseUrl}")
     private String baseUrl;
 
-
     private final WebClient webClient;
 
-    public DifyClient() {
-        this.webClient = WebClient.create();
+    @Autowired
+    public DifyClient(WebClient webClient) {
+        this.webClient = webClient;
     }
 
     public DifyClient(String apiKey, String baseUrl) {
@@ -46,7 +48,7 @@ public class DifyClient {
         this.apiKey = apiKey;
     }
 
-    public DifyResponse sendMessageBlocking(DifyRequest request) {
+    public Object sendMessageBlocking(DifyRequest request) {
         if ("streaming".equals(request.getResponse_mode())) {
             throw new IllegalArgumentException("you should call sendMessageStreaming method for streaming response");
         }
@@ -55,9 +57,17 @@ public class DifyClient {
                 .header("Authorization", "Bearer " + apiKey)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
-                .retrieve()
-                .bodyToMono(DifyResponse.class)
-                .block();
+                .exchangeToMono(
+                        clientResponse -> {
+                            if (clientResponse.statusCode().is2xxSuccessful()) {
+                                return clientResponse.bodyToMono(DifyResponse.class);
+                            } else {
+                                // Handle non-2xx HTTP status
+                                // Here, we read the error body only once
+                                return clientResponse.bodyToMono(FailedResponse.class);
+                            }
+                        }
+                ).block();
     }
 
     public Flux<DifyResponse> sendMessageStreaming(DifyRequest request) {
@@ -67,7 +77,9 @@ public class DifyClient {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .retrieve()
-                .bodyToFlux(DifyResponse.class);
+                .bodyToFlux(DifyResponse.class)
+                .doOnNext(response -> log.info("Received response: {}", response));
+
     }
 
     public FeedbackResponse sendFeedback(String messageId, FeedbackRequest request) {
@@ -78,6 +90,7 @@ public class DifyClient {
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(FeedbackResponse.class)
+                .doOnNext(feedbackResponse -> log.info("Received response: {}", feedbackResponse))
                 .block();
     }
 

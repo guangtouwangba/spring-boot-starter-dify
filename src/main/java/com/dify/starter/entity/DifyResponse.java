@@ -12,6 +12,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DifyResponse implements Serializable {
+    private String event;
+    private String task_id;
     private String answer;
     private String conversation_id;
     private Long created_at;
